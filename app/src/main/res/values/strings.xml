@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">AllowanceTracker</string>
+    <string name="allowance_title">Allowance:</string>
+</resources>
