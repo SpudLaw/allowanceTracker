@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">AllowanceTracker</string>
     <string name="allowance_title">Allowance:</string>
+    <string name="cost_hint_label">Cost</string>
+    <string name="description_hint_label">Description</string>
+    <string name="add_purchase_button_label">Add Purchase</string>
 </resources>

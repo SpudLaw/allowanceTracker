@@ -3,11 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Caroline/StudioProjects/allowanceTracker/app/src/main/res/layout/dialog_purchase.xml" value="0.23958333333333334" />
+        <entry key="..\:/Users/Caroline/StudioProjects/allowanceTracker/app/src/main/res/layout/main_activity.xml" value="0.11594202898550725" />
+        <entry key="..\:/Users/Caroline/StudioProjects/allowanceTracker/app/src/main/res/layout/main_fragment.xml" value="0.11594202898550725" />
         <entry key="app/src/main/res/layout/main_fragment.xml" value="0.20989583333333334" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
