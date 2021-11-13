@@ -4,4 +4,6 @@
     <string name="cost_hint_label">Cost</string>
     <string name="description_hint_label">Description</string>
     <string name="add_purchase_button_label">Add Purchase</string>
+    <string name="add_a_purchase_dialog_title">Add a Purchase</string>
+    <string name="cancel_button_label">Cancel</string>
 </resources>
