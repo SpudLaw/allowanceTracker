@@ -2,12 +2,28 @@ package com.example.allowancetracker.ui.main
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.example.allowancetracker.data.Purchase
+import com.example.allowancetracker.data.PurchaseDatabase
+import com.example.allowancetracker.data.PurchaseRepository
+import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-    var allowance: Double = 400.0
-    var purchases: MutableList<Purchase> = mutableListOf()
+    private val repository: PurchaseRepository
+    var allowance: MutableLiveData<Double>
+    var purchases: LiveData<List<Purchase>>
 
-    fun add(purchase: Purchase) {
-        purchases.add(purchase)
+    init {
+        val purchaseDao = PurchaseDatabase.getDatabase(application, viewModelScope).purchaseDao()
+        repository = PurchaseRepository(purchaseDao)
+        purchases = repository.allPurchases
+
+        allowance = MutableLiveData(400.0)
+    }
+
+    fun add(purchase: Purchase) = viewModelScope.launch {
+        repository.insert(purchase)
     }
 }
