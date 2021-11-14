@@ -12,7 +12,7 @@ class PurchasesAdapter : RecyclerView.Adapter<PurchasesAdapter.ViewHolder>() {
     class ViewHolder(private val binding: ListItemPurchaseBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(purchase: Purchase) {
-            binding.costTextview.text = String.format("%.2f", purchase.cost)
+            binding.costTextview.text = String.format("$%.2f", purchase.cost)
             binding.descriptionTextview.text = purchase.description
         }
     }

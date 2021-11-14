@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PurchaseRepository
-    var allowance: MutableLiveData<Double>
+    var balance: MutableLiveData<Double>
     var purchases: LiveData<List<Purchase>>
 
     init {
@@ -20,10 +20,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         repository = PurchaseRepository(purchaseDao)
         purchases = repository.allPurchases
 
-        allowance = MutableLiveData(400.0)
+        balance = MutableLiveData(400.0)
     }
 
     fun add(purchase: Purchase) = viewModelScope.launch {
         repository.insert(purchase)
+    }
+
+    fun getBalanceString(): String {
+        return String.format("$%.2f", balance.value)
     }
 }

@@ -41,8 +41,8 @@ class MainFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        viewModel.allowance.observe(viewLifecycleOwner, Observer { allowance ->
-            binding.allowanceValue.text = String.format("%.2f", allowance)
+        viewModel.balance.observe(viewLifecycleOwner, Observer { allowance ->
+            binding.balanceValue.text = viewModel.getBalanceString()
         })
 
         viewModel.purchases.observe(viewLifecycleOwner, Observer { purchases ->
@@ -54,10 +54,10 @@ class MainFragment : Fragment() {
                 currentAllowance -= it.cost
             }
 
-            viewModel.allowance.value = currentAllowance
+            viewModel.balance.value = currentAllowance
         })
 
-        binding.allowanceValue.text = "$" + viewModel.allowance.toString()
+        binding.balanceValue.text = viewModel.getBalanceString()
         binding.purchasesRecyclerView.adapter = purchasesAdapter
         binding.purchasesRecyclerView.layoutManager = LinearLayoutManager(context)
 
@@ -76,7 +76,7 @@ class MainFragment : Fragment() {
                         val purchase = Purchase(0, cost, null, description)
 
                         viewModel.add(purchase)
-                        viewModel.allowance.value = viewModel.allowance.value?.minus(purchase.cost)
+                        viewModel.balance.value = viewModel.balance.value?.minus(purchase.cost)
 
                     } else {
                         Toast.makeText(
