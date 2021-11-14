@@ -31,6 +31,20 @@
         app:layout_constraintStart_toEndOf="@+id/balance_title"
         app:layout_constraintTop_toTopOf="@+id/balance_title" />
 
+    <ImageButton
+        android:id="@+id/add_to_balance_button"
+        android:layout_gravity="left"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:scaleType="fitStart"
+        android:src="@drawable/ic_baseline_add_box_24"
+        style="@style/Theme.AllowanceTracker"
+        app:layout_constraintTop_toTopOf="@+id/balance_title"
+        app:layout_constraintStart_toEndOf="@id/balance_value"
+        app:layout_constraintBottom_toBottomOf="@id/balance_title"
+        android:contentDescription="@string/add_to_balance_button_content_desc" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/purchases_recycler_view"
         android:layout_width="match_parent"
@@ -60,5 +74,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/allowance_dialog"
+        layout="@layout/dialog_balance"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

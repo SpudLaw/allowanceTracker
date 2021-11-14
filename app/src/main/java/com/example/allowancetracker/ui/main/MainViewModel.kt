@@ -1,6 +1,8 @@
 package com.example.allowancetracker.ui.main
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,16 +17,27 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     var balance: MutableLiveData<Double>
     var purchases: LiveData<List<Purchase>>
 
+    var sharedPref: SharedPreferences
+
     init {
         val purchaseDao = PurchaseDatabase.getDatabase(application, viewModelScope).purchaseDao()
         repository = PurchaseRepository(purchaseDao)
         purchases = repository.allPurchases
 
-        balance = MutableLiveData(400.0)
+        sharedPref = application.getSharedPreferences("preference_key",Context.MODE_PRIVATE)
+        val defaultValue = 400.toFloat()
+        val currentAllowance = sharedPref.getFloat("balance", defaultValue).toDouble()
+
+        balance = MutableLiveData(currentAllowance)
     }
 
     fun add(purchase: Purchase) = viewModelScope.launch {
         repository.insert(purchase)
+
+        with (sharedPref.edit()) {
+            balance.value?.let { putFloat("balance", it.toFloat()) }
+            apply()
+        }
     }
 
     fun getBalanceString(): String {

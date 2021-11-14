@@ -1,6 +1,7 @@
 package com.example.allowancetracker.ui.main
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -42,16 +43,16 @@ class MainFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         viewModel.balance.observe(viewLifecycleOwner, Observer { allowance ->
-            binding.balanceValue.text = viewModel.getBalanceString()
+            binding.balanceValue.text = String.format("$%.2f", allowance)
         })
 
         viewModel.purchases.observe(viewLifecycleOwner, Observer { purchases ->
             purchases.let { purchasesAdapter.setPurchases(it) }
 
-            var currentAllowance: Double = 400.0
+            var currentAllowance = viewModel.balance.value
 
-            purchases.forEach {
-                currentAllowance -= it.cost
+            if (purchases.isNotEmpty()) {
+                currentAllowance = currentAllowance?.minus( purchases.last().cost)
             }
 
             viewModel.balance.value = currentAllowance
@@ -60,6 +61,7 @@ class MainFragment : Fragment() {
         binding.balanceValue.text = viewModel.getBalanceString()
         binding.purchasesRecyclerView.adapter = purchasesAdapter
         binding.purchasesRecyclerView.layoutManager = LinearLayoutManager(context)
+
 
         binding.addPurchaseButton.setOnClickListener {
             with(binding.addPurchaseDialog) {
@@ -76,7 +78,7 @@ class MainFragment : Fragment() {
                         val purchase = Purchase(0, cost, null, description)
 
                         viewModel.add(purchase)
-                        viewModel.balance.value = viewModel.balance.value?.minus(purchase.cost)
+
 
                     } else {
                         Toast.makeText(
@@ -94,10 +96,43 @@ class MainFragment : Fragment() {
 
             toggleDialogVisibility(true)
         }
+
+        binding.addToBalanceButton.setOnClickListener {
+            with(binding.allowanceDialog) {
+                balanceTextEdit.text?.clear()
+
+                dialogPositiveButton.setOnClickListener {
+                    toggleDialogVisibility(visible = false, purchase = false)
+
+                    if (balanceTextEdit.text?.isNotBlank() == true) {
+                        val currentAllowance: Double =
+                            viewModel.balance.value?.plus(balanceTextEdit.text.toString().toDouble()) ?: -1.0
+
+                        viewModel.balance.value = currentAllowance
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Please enter allowance",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
+                dialogNegativeButton.setOnClickListener {
+                    toggleDialogVisibility(visible = false, purchase = false)
+                }
+            }
+            toggleDialogVisibility(visible = true, purchase = false)
+        }
     }
 
-    private fun toggleDialogVisibility(visible: Boolean) {
-        binding.addPurchaseDialog.root.isVisible = visible
+    private fun toggleDialogVisibility(visible: Boolean, purchase: Boolean = true) {
+        if (purchase) {
+            binding.addPurchaseDialog.root.isVisible = visible
+        } else {
+            binding.allowanceDialog.root.isVisible = visible
+        }
+
     }
 
 }

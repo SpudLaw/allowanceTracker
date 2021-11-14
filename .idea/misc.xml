@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Caroline/StudioProjects/allowanceTracker/app/src/main/res/drawable/ic_baseline_add_box_24.xml" value="0.221875" />
+        <entry key="..\:/Users/Caroline/StudioProjects/allowanceTracker/app/src/main/res/drawable/myrect.xml" value="0.38229166666666664" />
+        <entry key="..\:/Users/Caroline/StudioProjects/allowanceTracker/app/src/main/res/layout/dialog_allowance.xml" value="0.24479166666666666" />
         <entry key="..\:/Users/Caroline/StudioProjects/allowanceTracker/app/src/main/res/layout/dialog_purchase.xml" value="0.23958333333333334" />
         <entry key="..\:/Users/Caroline/StudioProjects/allowanceTracker/app/src/main/res/layout/list_item_purchase.xml" value="0.26927083333333335" />
         <entry key="..\:/Users/Caroline/StudioProjects/allowanceTracker/app/src/main/res/layout/main_activity.xml" value="0.11594202898550725" />
