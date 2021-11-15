@@ -11,4 +11,10 @@
     <string name="set_allowance_button_label">Set Allowance</string>
     <string name="add_to_balance_button_label">Add to Balance</string>
     <string name="add_to_balance_button_content_desc">Add to Balance Button</string>
+    <string name="delete_purchase_button_label">DELETE PURCHASE</string>
+    <string name="delete_content_desc">Delete</string>
+    <string name="save_purchase_button_label">Save Purchase</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="edit_purchase_title">Edit Purchase</string>
 </resources>

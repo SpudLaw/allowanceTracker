@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.allowancetracker.ui.main.MainFragment"
+        android:label="main_fragment"
+        tools:layout="@layout/main_fragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_purchaseDetailsFragment2"
+            app:destination="@id/purchaseDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/purchaseDetailsFragment"
+        android:name="com.example.allowancetracker.PurchaseDetailsFragment"
+        android:label="fragment_purchase_details"
+        tools:layout="@layout/fragment_purchase_details" >
+        <argument
+            android:name="purchase"
+            app:argType="com.example.allowancetracker.data.Purchase" />
+    </fragment>
+</navigation>

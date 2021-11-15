@@ -10,4 +10,9 @@ class PurchaseRepository(private val purchaseDao: PurchaseDao) {
     suspend fun insert(purchase: Purchase) {
         purchaseDao.add(purchase)
     }
+
+    @WorkerThread
+    suspend fun delete(purchase: Purchase) {
+        purchaseDao.delete(purchase.id)
+    }
 }

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.allowancetracker.data.Purchase
@@ -14,8 +15,8 @@ import com.example.allowancetracker.databinding.MainFragmentBinding
 
 class MainFragment : Fragment() {
 
+    private val viewModel: MainViewModel by activityViewModels()
     private lateinit var binding: MainFragmentBinding
-    private lateinit var viewModel: MainViewModel
     private lateinit var purchasesAdapter: PurchasesAdapter
 
 
@@ -35,8 +36,6 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         viewModel.balance.observe(viewLifecycleOwner, { allowance ->
             binding.balanceValue.text = String.format("$%.2f", allowance)

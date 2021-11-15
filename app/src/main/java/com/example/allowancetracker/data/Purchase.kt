@@ -11,7 +11,7 @@ import java.util.*
 @Entity(tableName = "purchase_table")
 data class Purchase(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo(name = "cost") val cost: Double,
+    @ColumnInfo(name = "cost") var cost: Double,
     @ColumnInfo(name = "date") val date: Date?,
-    @ColumnInfo(name = "description") val description: String
+    @ColumnInfo(name = "description") var description: String
 ) : Parcelable

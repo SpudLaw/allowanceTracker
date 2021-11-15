@@ -53,4 +53,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             this?.apply()
         }
     }
+
+    fun delete(purchase: Purchase) = viewModelScope.launch {
+        repository.delete(purchase)
+    }
 }

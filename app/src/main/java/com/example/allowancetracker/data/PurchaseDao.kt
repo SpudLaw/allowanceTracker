@@ -16,4 +16,7 @@ interface PurchaseDao {
 
     @Query("DELETE FROM purchase_table")
     suspend fun deleteAll()
+
+    @Query("DELETE FROM purchase_table WHERE id = :purchaseId")
+    suspend fun delete(vararg purchaseId: Int)
 }

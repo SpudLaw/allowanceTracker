@@ -2,6 +2,7 @@ package com.example.allowancetracker.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.allowancetracker.data.Purchase
 import com.example.allowancetracker.databinding.ListItemPurchaseBinding
@@ -14,6 +15,11 @@ class PurchasesAdapter : RecyclerView.Adapter<PurchasesAdapter.ViewHolder>() {
         fun bind(purchase: Purchase) {
             binding.costTextview.text = String.format("$%.2f", purchase.cost)
             binding.descriptionTextview.text = purchase.description
+
+            binding.root.setOnClickListener {
+                val action = MainFragmentDirections.actionMainFragmentToPurchaseDetailsFragment2(purchase)
+                binding.root.findNavController().navigate(action)
+            }
         }
     }
 
