@@ -34,9 +34,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun add(purchase: Purchase) = viewModelScope.launch {
         repository.insert(purchase)
 
-        with(sharedPref.edit()) {
-            balance.value?.let { putFloat("balance", it.toFloat()) }
-            apply()
+        val currentAllowance = balance.value?.minus(purchase.cost)
+
+        if (currentAllowance != null) {
+            setBalance(currentAllowance)
         }
     }
 

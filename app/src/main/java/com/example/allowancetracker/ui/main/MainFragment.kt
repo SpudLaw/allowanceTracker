@@ -67,14 +67,6 @@ class MainFragment : Fragment() {
 
                         viewModel.add(purchase)
 
-                        var currentAllowance = viewModel.balance.value
-
-                        currentAllowance = currentAllowance?.minus(cost)
-
-                        if (currentAllowance != null) {
-                            viewModel.setBalance(currentAllowance)
-                        }
-
                     } else {
                         Toast.makeText(
                             context,
