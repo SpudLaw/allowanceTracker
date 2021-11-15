@@ -1,7 +1,5 @@
 package com.example.allowancetracker.ui.main
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.allowancetracker.data.Purchase
@@ -36,26 +33,17 @@ class MainFragment : Fragment() {
         purchasesAdapter = PurchasesAdapter()
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        viewModel.balance.observe(viewLifecycleOwner, Observer { allowance ->
+        viewModel.balance.observe(viewLifecycleOwner, { allowance ->
             binding.balanceValue.text = String.format("$%.2f", allowance)
         })
 
-        viewModel.purchases.observe(viewLifecycleOwner, Observer { purchases ->
+        viewModel.purchases.observe(viewLifecycleOwner, { purchases ->
             purchases.let { purchasesAdapter.setPurchases(it) }
-
-            var currentAllowance = viewModel.balance.value
-
-            if (purchases.isNotEmpty()) {
-                currentAllowance = currentAllowance?.minus( purchases.last().cost)
-            }
-
-            viewModel.balance.value = currentAllowance
         })
 
         binding.balanceValue.text = viewModel.getBalanceString()
@@ -79,6 +67,13 @@ class MainFragment : Fragment() {
 
                         viewModel.add(purchase)
 
+                        var currentAllowance = viewModel.balance.value
+
+                        currentAllowance = currentAllowance?.minus(cost)
+
+                        if (currentAllowance != null) {
+                            viewModel.setBalance(currentAllowance)
+                        }
 
                     } else {
                         Toast.makeText(
@@ -106,9 +101,11 @@ class MainFragment : Fragment() {
 
                     if (balanceTextEdit.text?.isNotBlank() == true) {
                         val currentAllowance: Double =
-                            viewModel.balance.value?.plus(balanceTextEdit.text.toString().toDouble()) ?: -1.0
+                            viewModel.balance.value?.plus(
+                                balanceTextEdit.text.toString().toDouble()
+                            ) ?: -1.0
 
-                        viewModel.balance.value = currentAllowance
+                        viewModel.setBalance(currentAllowance)
                     } else {
                         Toast.makeText(
                             context,

@@ -17,14 +17,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     var balance: MutableLiveData<Double>
     var purchases: LiveData<List<Purchase>>
 
-    var sharedPref: SharedPreferences
+    private var sharedPref: SharedPreferences
 
     init {
         val purchaseDao = PurchaseDatabase.getDatabase(application, viewModelScope).purchaseDao()
         repository = PurchaseRepository(purchaseDao)
         purchases = repository.allPurchases
 
-        sharedPref = application.getSharedPreferences("preference_key",Context.MODE_PRIVATE)
+        sharedPref = application.getSharedPreferences("preference_key", Context.MODE_PRIVATE)
         val defaultValue = 400.toFloat()
         val currentAllowance = sharedPref.getFloat("balance", defaultValue).toDouble()
 
@@ -34,7 +34,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun add(purchase: Purchase) = viewModelScope.launch {
         repository.insert(purchase)
 
-        with (sharedPref.edit()) {
+        with(sharedPref.edit()) {
             balance.value?.let { putFloat("balance", it.toFloat()) }
             apply()
         }
@@ -42,5 +42,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getBalanceString(): String {
         return String.format("$%.2f", balance.value)
+    }
+
+    fun setBalance(amount: Double) {
+        balance.value = amount
+
+        with(sharedPref.edit()) {
+            balance.value?.let { this?.putFloat("balance", it.toFloat()) }
+            this?.apply()
+        }
     }
 }
