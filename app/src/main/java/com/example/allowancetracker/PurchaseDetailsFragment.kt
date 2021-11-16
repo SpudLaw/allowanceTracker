@@ -28,7 +28,7 @@ class PurchaseDetailsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            purchase = it.getParcelable(PURCHASE_ARG)
+            purchase = PurchaseDetailsFragmentArgs.fromBundle(it).purchase
         }
     }
 
@@ -44,6 +44,10 @@ class PurchaseDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
+
+            costEditText.setText(purchase?.cost.toString())
+            descriptionEditText.setText(purchase?.description)
+
             saveButton.setOnClickListener {
                 if (costEditText.text?.isNotBlank() == true || descriptionEditText.text?.isNotBlank() == true) {
                     if (costEditText.text?.isNotBlank() == true) {
