@@ -10,6 +10,7 @@ import java.util.*
 @Parcelize
 @Entity(tableName = "purchase_table")
 data class Purchase(
+    @ColumnInfo(name = "type") val type: PurchaseType,
     @ColumnInfo(name = "cost") val cost: Double,
     @ColumnInfo(name = "date") val date: Date?,
     @ColumnInfo(name = "description") val description: String,

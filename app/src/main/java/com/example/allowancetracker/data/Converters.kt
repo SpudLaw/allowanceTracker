@@ -13,4 +13,11 @@ class Converters {
     fun dateToTimestamp(date: Date?): Long? {
         return date?.time
     }
+
+    @TypeConverter
+    fun toPurchaseType(purchaseType: PurchaseType): Int = purchaseType.ordinal
+
+    @TypeConverter
+    fun fromPurchasetype(int: Int): PurchaseType = PurchaseType.values()[int]
+
 }

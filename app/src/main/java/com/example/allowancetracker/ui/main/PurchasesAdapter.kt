@@ -11,6 +11,7 @@ import androidx.annotation.AttrRes
 import androidx.recyclerview.widget.RecyclerView
 import com.example.allowancetracker.R
 import com.example.allowancetracker.data.Purchase
+import com.example.allowancetracker.data.PurchaseType
 import com.example.allowancetracker.databinding.ListItemPurchaseBinding
 
 
@@ -24,7 +25,7 @@ class PurchasesAdapter : RecyclerView.Adapter<PurchasesAdapter.ViewHolder>() {
             binding.costTextview.text = String.format("$%.2f", purchase.cost)
             binding.descriptionTextview.text = purchase.description
 
-            if (purchase.description == "-- Increase Balance --") {
+            if (purchase.type != PurchaseType.Purchase) {
                 binding.costTextview.setTextColor(Color.parseColor("#008000"))
             } else {
                 val ta: TypedArray =

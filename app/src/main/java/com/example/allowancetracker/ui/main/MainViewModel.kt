@@ -3,68 +3,43 @@ package com.example.allowancetracker.ui.main
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.allowancetracker.data.Purchase
 import com.example.allowancetracker.data.PurchaseDatabase
 import com.example.allowancetracker.data.PurchaseRepository
+import com.example.allowancetracker.data.PurchaseType
 import kotlinx.coroutines.launch
 import java.util.*
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PurchaseRepository
-    var balance: MutableLiveData<Double>
+    val balance: LiveData<Double>
+    val balanceString: LiveData<String>
     var purchases: LiveData<List<Purchase>>
-
-    private var sharedPref: SharedPreferences
 
     init {
         val purchaseDao = PurchaseDatabase.getDatabase(application, viewModelScope).purchaseDao()
         repository = PurchaseRepository(purchaseDao)
         purchases = repository.allPurchases
 
-        sharedPref = application.getSharedPreferences("preference_key", Context.MODE_PRIVATE)
-        val defaultValue = 400.toFloat()
-        val currentAllowance = sharedPref.getFloat("balance", defaultValue).toDouble()
+        balance = purchases.map { //Each time we get a new list of purchases
 
-        balance = MutableLiveData(currentAllowance)
+            //Starting with a 0.0 balance, loop through the list
+            it.fold(0.0){ total, purchase ->
+                when(purchase.type){
+                    //If a purchase is a deposit, we add it to the total
+                    PurchaseType.InitialDeposit,
+                    PurchaseType.Deposit ->  total + purchase.cost
+                    //If a purchase is a purchase, we remove it from the total
+                    PurchaseType.Purchase ->  total - purchase.cost
+                }
+            }
+        }
+
+        balanceString = balance.map { String.format("$%.2f", it) }
     }
 
     fun add(purchase: Purchase) = viewModelScope.launch {
         repository.insert(purchase)
-
-        val currentAllowance = balance.value?.minus(purchase.cost)
-
-        if (currentAllowance != null) {
-            balance.value = currentAllowance
-
-            with(sharedPref.edit()) {
-                balance.value?.let { this?.putFloat("balance", it.toFloat()) }
-                this?.apply()
-            }
-        }
-    }
-
-    fun getBalanceString(): String {
-        return String.format("$%.2f", balance.value)
-    }
-
-    fun setBalance(amount: Double) = viewModelScope.launch {
-
-        val currentAllowance: Double =
-            balance.value?.plus(
-                amount
-            ) ?: -1.0
-
-        balance.value = currentAllowance
-
-        with(sharedPref.edit()) {
-            balance.value?.let { this?.putFloat("balance", it.toFloat()) }
-            this?.apply()
-        }
-
-        repository.insert(Purchase(amount, Date(), "-- Increase Balance --"))
     }
 }
