@@ -1,5 +1,6 @@
 package com.example.allowancetracker.ui.main
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +15,12 @@ class PurchasesAdapter : RecyclerView.Adapter<PurchasesAdapter.ViewHolder>() {
         fun bind(purchase: Purchase) {
             binding.costTextview.text = String.format("$%.2f", purchase.cost)
             binding.descriptionTextview.text = purchase.description
+
+            if (purchase.description == "-- Increase Balance --") {
+                binding.costTextview.setTextColor(Color.parseColor("#008000"))
+            } else {
+                binding.costTextview.setTextColor(Color.parseColor("#FFFFFF"))
+            }
         }
     }
 
@@ -30,7 +37,7 @@ class PurchasesAdapter : RecyclerView.Adapter<PurchasesAdapter.ViewHolder>() {
     override fun getItemCount() = purchaseList.count()
 
     fun setPurchases(purchases: List<Purchase>) {
-        purchaseList = purchases
+        purchaseList = purchases.asReversed()
         notifyDataSetChanged()
     }
 }

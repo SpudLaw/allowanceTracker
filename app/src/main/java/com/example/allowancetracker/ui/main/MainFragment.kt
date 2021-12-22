@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.allowancetracker.data.Purchase
 import com.example.allowancetracker.databinding.MainFragmentBinding
+import java.util.*
 
 class MainFragment : Fragment() {
 
@@ -67,21 +68,37 @@ class MainFragment : Fragment() {
 
                         viewModel.add(purchase)
 
+                        var currentAllowance = viewModel.balance.value
+
+                        currentAllowance = currentAllowance?.minus(cost)
+
+                        if (currentAllowance != null) {
+                            viewModel.setBalance(currentAllowance)
+                        }
+
+                        binding.addPurchaseButton.isVisible = true
+
                     } else {
                         Toast.makeText(
                             context,
                             "Please enter cost and description",
                             Toast.LENGTH_LONG
                         ).show()
+
                     }
+
+                    binding.addPurchaseButton.isVisible = true
                 }
 
                 dialogNegativeButton.setOnClickListener {
                     toggleDialogVisibility(false)
+                    binding.addPurchaseButton.isVisible = true
                 }
             }
 
             toggleDialogVisibility(true)
+
+            binding.addPurchaseButton.isVisible = false
         }
 
         binding.addToBalanceButton.setOnClickListener {
@@ -91,13 +108,18 @@ class MainFragment : Fragment() {
                 dialogPositiveButton.setOnClickListener {
                     toggleDialogVisibility(visible = false, purchase = false)
 
+                    // move this if to view model
                     if (balanceTextEdit.text?.isNotBlank() == true) {
+
+                        val amountToAdd: Double = balanceTextEdit.text.toString().toDouble()
+
                         val currentAllowance: Double =
                             viewModel.balance.value?.plus(
-                                balanceTextEdit.text.toString().toDouble()
+                                amountToAdd
                             ) ?: -1.0
 
                         viewModel.setBalance(currentAllowance)
+                        viewModel.add(Purchase(0,amountToAdd, Date(), "-- Increase Balance --"))
                     } else {
                         Toast.makeText(
                             context,
