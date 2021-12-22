@@ -5,11 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [Purchase::class], version = 1)
+@Database(entities = [Purchase::class], version = 2)
 @TypeConverters(Converters::class)
 abstract class PurchaseDatabase : RoomDatabase() {
 
@@ -19,6 +20,29 @@ abstract class PurchaseDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: PurchaseDatabase? = null
 
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE purchase_table ADD COLUMN type INTEGER DEFAULT 0 NOT NULL")
+
+                //Fill the new 'type' column based on the name of the purchase
+                database.execSQL(
+                    "UPDATE purchase_table " +
+                        "SET type=${PurchaseType.Deposit.ordinal} " +
+                        "WHERE description LIKE '-- Increase Balance --'")
+                database
+                    .execSQL(
+                        "UPDATE purchase_table " +
+                            "SET type=${PurchaseType.Purchase.ordinal} " +
+                            "WHERE description NOT LIKE '-- Increase Balance --'")
+                //Add an initial deposit based on the old initial deposit of $400
+                database
+                    .execSQL(
+                        "INSERT INTO purchase_table (cost, date, description, type) " +
+                            "VALUES (400.00, 1636755713, 'Initial Deposit', ${PurchaseType.InitialDeposit.ordinal})")
+
+            }
+        }
+
         fun getDatabase(context: Context, scope: CoroutineScope): PurchaseDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -26,6 +50,7 @@ abstract class PurchaseDatabase : RoomDatabase() {
                     PurchaseDatabase::class.java,
                     "purchase-database"
                 )
+                    .addMigrations(MIGRATION_1_2)
                     .addCallback(PurchaseDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
