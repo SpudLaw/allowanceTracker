@@ -68,14 +68,6 @@ class MainFragment : Fragment() {
 
                         viewModel.add(purchase)
 
-                        var currentAllowance = viewModel.balance.value
-
-                        currentAllowance = currentAllowance?.minus(cost)
-
-                        if (currentAllowance != null) {
-                            viewModel.setBalance(currentAllowance)
-                        }
-
                         binding.addPurchaseButton.isVisible = true
 
                     } else {
@@ -108,18 +100,10 @@ class MainFragment : Fragment() {
                 dialogPositiveButton.setOnClickListener {
                     toggleDialogVisibility(visible = false, purchase = false)
 
-                    // move this if to view model
                     if (balanceTextEdit.text?.isNotBlank() == true) {
-
                         val amountToAdd: Double = balanceTextEdit.text.toString().toDouble()
+                        viewModel.setBalance(amountToAdd)
 
-                        val currentAllowance: Double =
-                            viewModel.balance.value?.plus(
-                                amountToAdd
-                            ) ?: -1.0
-
-                        viewModel.setBalance(currentAllowance)
-                        viewModel.add(Purchase(0,amountToAdd, Date(), "-- Increase Balance --"))
                     } else {
                         Toast.makeText(
                             context,

@@ -11,6 +11,7 @@ import com.example.allowancetracker.data.Purchase
 import com.example.allowancetracker.data.PurchaseDatabase
 import com.example.allowancetracker.data.PurchaseRepository
 import kotlinx.coroutines.launch
+import java.util.*
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PurchaseRepository
@@ -37,7 +38,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val currentAllowance = balance.value?.minus(purchase.cost)
 
         if (currentAllowance != null) {
-            setBalance(currentAllowance)
+            balance.value = currentAllowance
+
+            with(sharedPref.edit()) {
+                balance.value?.let { this?.putFloat("balance", it.toFloat()) }
+                this?.apply()
+            }
         }
     }
 
@@ -45,12 +51,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return String.format("$%.2f", balance.value)
     }
 
-    fun setBalance(amount: Double) {
-        balance.value = amount
+    fun setBalance(amount: Double) = viewModelScope.launch {
+
+        val currentAllowance: Double =
+            balance.value?.plus(
+                amount
+            ) ?: -1.0
+
+        balance.value = currentAllowance
 
         with(sharedPref.edit()) {
             balance.value?.let { this?.putFloat("balance", it.toFloat()) }
             this?.apply()
         }
+
+        repository.insert(Purchase(0,amount, Date(), "-- Increase Balance --"))
     }
 }

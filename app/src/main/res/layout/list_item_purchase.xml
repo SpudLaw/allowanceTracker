@@ -32,6 +32,7 @@
         app:layout_constraintStart_toEndOf="@id/description_textview"
         app:layout_constraintTop_toTopOf="parent"
         android:textAlignment="textEnd"
-        tools:text="$0.00" />
+        tools:text="$0.00"
+        android:textColor="?android:textColorPrimary"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
