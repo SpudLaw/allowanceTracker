@@ -65,6 +65,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             this?.apply()
         }
 
-        repository.insert(Purchase(0,amount, Date(), "-- Increase Balance --"))
+        repository.insert(Purchase(amount, Date(), "-- Increase Balance --"))
     }
 }
