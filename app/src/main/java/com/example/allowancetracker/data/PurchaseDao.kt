@@ -8,7 +8,7 @@ import androidx.room.Query
 
 @Dao
 interface PurchaseDao {
-    @Query("SELECT * from purchase_table")
+    @Query("SELECT * from purchase_table ORDER BY date ASC")
     fun getAll(): LiveData<List<Purchase>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

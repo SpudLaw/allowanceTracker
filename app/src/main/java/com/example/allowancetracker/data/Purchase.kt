@@ -12,7 +12,7 @@ import java.util.*
 data class Purchase(
     @ColumnInfo(name = "type") val type: PurchaseType,
     @ColumnInfo(name = "cost") val cost: Double,
-    @ColumnInfo(name = "date") val date: Date?,
+    @ColumnInfo(name = "date") val date: Date? = Date(),
     @ColumnInfo(name = "description") val description: String,
     @PrimaryKey(autoGenerate = true) val id: Int = 0
 ) : Parcelable

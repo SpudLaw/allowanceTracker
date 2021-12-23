@@ -68,7 +68,7 @@ class MainFragment : Fragment() {
                     if (costEditText.text?.isNotBlank() == true && descriptionEditText.text?.isNotBlank() == true) {
                         val cost: Double = costEditText.text?.toString()?.toDouble() ?: 0.0
                         val description: String = descriptionEditText.text.toString()
-                        val purchase = Purchase(PurchaseType.Purchase, cost, null, description)
+                        val purchase = Purchase(PurchaseType.Purchase, cost, Date(), description)
 
                         viewModel.add(purchase)
 

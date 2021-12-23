@@ -10,7 +10,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [Purchase::class], version = 2)
+@Database(entities = [Purchase::class], version = 3)
 @TypeConverters(Converters::class)
 abstract class PurchaseDatabase : RoomDatabase() {
 
@@ -38,11 +38,16 @@ abstract class PurchaseDatabase : RoomDatabase() {
                 database
                     .execSQL(
                         "INSERT INTO purchase_table (cost, date, description, type) " +
-                            "VALUES (400.00, 1636755713, 'Initial Deposit', ${PurchaseType.InitialDeposit.ordinal})")
+                            "VALUES (400.00, 1636511460000, 'Initial Deposit', ${PurchaseType.InitialDeposit.ordinal})")
 
             }
         }
-
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("UPDATE purchase_table SET date= 1636511460000 + id WHERE type != ${PurchaseType.InitialDeposit.ordinal}")
+                database.execSQL("UPDATE purchase_table SET date= 1636511460000 WHERE type == ${PurchaseType.InitialDeposit.ordinal}")
+            }
+        }
         fun getDatabase(context: Context, scope: CoroutineScope): PurchaseDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -51,6 +56,7 @@ abstract class PurchaseDatabase : RoomDatabase() {
                     "purchase-database"
                 )
                     .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_2_3)
                     .addCallback(PurchaseDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
