@@ -1,17 +1,14 @@
 package com.example.allowancetracker.ui.main
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.Color
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.AttrRes
 import androidx.recyclerview.widget.RecyclerView
 import com.example.allowancetracker.R
 import com.example.allowancetracker.data.Purchase
-import com.example.allowancetracker.data.PurchaseType
+import com.example.allowancetracker.data.TransactionType
 import com.example.allowancetracker.databinding.ListItemPurchaseBinding
 
 
@@ -25,7 +22,7 @@ class PurchasesAdapter : RecyclerView.Adapter<PurchasesAdapter.ViewHolder>() {
             binding.costTextview.text = String.format("$%.2f", purchase.cost)
             binding.descriptionTextview.text = purchase.description
 
-            if (purchase.type != PurchaseType.Purchase) {
+            if (purchase.type != TransactionType.Purchase) {
                 binding.costTextview.setTextColor(Color.parseColor("#008000"))
             } else {
                 val ta: TypedArray =

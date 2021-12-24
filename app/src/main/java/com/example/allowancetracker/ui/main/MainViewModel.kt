@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.allowancetracker.data.Purchase
 import com.example.allowancetracker.data.PurchaseDatabase
 import com.example.allowancetracker.data.PurchaseRepository
-import com.example.allowancetracker.data.PurchaseType
 import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {

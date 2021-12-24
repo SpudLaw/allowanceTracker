@@ -15,9 +15,10 @@ class Converters {
     }
 
     @TypeConverter
-    fun toPurchaseType(purchaseType: PurchaseType): Int = purchaseType.ordinal
+    fun toTransactionType(transactionType: TransactionType): String = transactionType.serializedName
 
     @TypeConverter
-    fun fromPurchasetype(int: Int): PurchaseType = PurchaseType.values()[int]
+    fun fromTransactionType(string: String): TransactionType = TransactionType.values()
+                                                            .first { it.serializedName == string }
 
 }

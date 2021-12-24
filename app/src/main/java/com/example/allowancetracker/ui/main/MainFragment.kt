@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.allowancetracker.data.Purchase
-import com.example.allowancetracker.data.PurchaseType
+import com.example.allowancetracker.data.TransactionType
 import com.example.allowancetracker.databinding.MainFragmentBinding
 import java.util.*
 
@@ -68,7 +68,7 @@ class MainFragment : Fragment() {
                     if (costEditText.text?.isNotBlank() == true && descriptionEditText.text?.isNotBlank() == true) {
                         val cost: Double = costEditText.text?.toString()?.toDouble() ?: 0.0
                         val description: String = descriptionEditText.text.toString()
-                        val purchase = Purchase(PurchaseType.Purchase, cost, Date(), description)
+                        val purchase = Purchase(TransactionType.Purchase, cost, Date(), description)
 
                         viewModel.add(purchase)
 
@@ -106,7 +106,7 @@ class MainFragment : Fragment() {
 
                     if (balanceTextEdit.text?.isNotBlank() == true) {
                         val amountToAdd: Double = balanceTextEdit.text.toString().toDouble()
-                        viewModel.add(Purchase(PurchaseType.Deposit, amountToAdd, Date(), "Deposit"))
+                        viewModel.add(Purchase(TransactionType.Deposit, amountToAdd, Date(), "Deposit"))
 
                     } else {
                         Toast.makeText(
