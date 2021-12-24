@@ -1,15 +1,14 @@
 package com.example.allowancetracker.data
 
-import android.os.Parcelable
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import kotlinx.parcelize.Parcelize
-import java.util.*
 
+enum class PurchaseType(
+    val isDeposit: Boolean //Deposit types add to the balance
+) {
+    InitialDeposit(true),
+    Purchase(false),
+    Deposit(true);
 
-enum class PurchaseType{
-    InitialDeposit,
-    Purchase,
-    Deposit
+    companion object {
+        val depositTypes = values().filter { it.isDeposit }
+    }
 }

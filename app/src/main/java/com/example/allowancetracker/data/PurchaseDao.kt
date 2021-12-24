@@ -16,4 +16,9 @@ interface PurchaseDao {
 
     @Query("DELETE FROM purchase_table")
     suspend fun deleteAll()
+
+    @Query("SELECT  (  SELECT  sum(cost)   FROM  purchase_table  WHERE  type IN (:depositTypes))  " +
+            " - (   SELECT sum(cost)   FROM    purchase_table   WHERE type NOT IN (:depositTypes) )")
+    fun getBalance(depositTypes: List<PurchaseType> = PurchaseType.depositTypes): LiveData<Double>
+
 }

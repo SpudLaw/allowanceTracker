@@ -19,20 +19,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     var purchases = repository.allPurchases
-
-    val balance = purchases.map {
-        //Each time we get a new list of purchases
-        //Starting with a 0.0 balance, loop through the list
-        it.fold(0.0) { total, purchase ->
-            when (purchase.type) {
-                //If a purchase is a deposit, we add it to the total
-                PurchaseType.InitialDeposit,
-                PurchaseType.Deposit -> total + purchase.cost
-                //If a purchase is a purchase, we remove it from the total
-                PurchaseType.Purchase -> total - purchase.cost
-            }
-        }
-    }
+    val balance = repository.balance
 
     val balanceString = balance.map { String.format("$%.2f", it) }
 

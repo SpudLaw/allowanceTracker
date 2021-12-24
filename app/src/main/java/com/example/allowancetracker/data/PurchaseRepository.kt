@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 
 class PurchaseRepository(private val purchaseDao: PurchaseDao) {
     val allPurchases: LiveData<List<Purchase>> = purchaseDao.getAll()
+    val balance: LiveData<Double> = purchaseDao.getBalance()
 
     @WorkerThread
     suspend fun insert(purchase: Purchase) {
