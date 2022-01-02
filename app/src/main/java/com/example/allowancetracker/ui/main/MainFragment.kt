@@ -1,55 +1,39 @@
 package com.example.allowancetracker.ui.main
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.allowancetracker.R
 import com.example.allowancetracker.data.Purchase
 import com.example.allowancetracker.databinding.MainFragmentBinding
-import java.util.*
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(R.layout.main_fragment) {
 
-    private lateinit var binding: MainFragmentBinding
-    private lateinit var viewModel: MainViewModel
-    private lateinit var purchasesAdapter: PurchasesAdapter
+    private var _binding: MainFragmentBinding? = null
 
+    private val binding: MainFragmentBinding
+        get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = MainFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        purchasesAdapter = PurchasesAdapter()
-    }
+    private val viewModel by viewModels<MainViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        _binding = MainFragmentBinding.bind(view)
 
         viewModel.balance.observe(viewLifecycleOwner, { allowance ->
             binding.balanceValue.text = String.format("$%.2f", allowance)
         })
 
-        viewModel.purchases.observe(viewLifecycleOwner, { purchases ->
-            purchases.let { purchasesAdapter.setPurchases(it) }
-        })
+        viewModel.purchases.observe(viewLifecycleOwner) {
+            (binding.purchasesRecyclerView.adapter as PurchasesAdapter).submitList(it.asReversed())
+        }
 
         binding.balanceValue.text = viewModel.getBalanceString()
-        binding.purchasesRecyclerView.adapter = purchasesAdapter
-        binding.purchasesRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.purchasesRecyclerView.adapter = PurchasesAdapter()
 
 
         binding.addPurchaseButton.setOnClickListener {
@@ -130,4 +114,9 @@ class MainFragment : Fragment() {
 
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Clear our the reference so our view can be garbage collected
+        _binding = null
+    }
 }

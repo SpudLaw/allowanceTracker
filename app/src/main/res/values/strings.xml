@@ -11,4 +11,6 @@
     <string name="set_allowance_button_label">Set Allowance</string>
     <string name="add_to_balance_button_label">Add to Balance</string>
     <string name="add_to_balance_button_content_desc">Add to Balance Button</string>
+
+    <string name="cost">%1$.2f</string>
 </resources>

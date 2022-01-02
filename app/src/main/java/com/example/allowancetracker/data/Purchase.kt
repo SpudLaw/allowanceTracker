@@ -14,4 +14,11 @@ data class Purchase(
     @ColumnInfo(name = "cost") val cost: Double,
     @ColumnInfo(name = "date") val date: Date?,
     @ColumnInfo(name = "description") val description: String
-) : Parcelable
+) : Parcelable {
+    companion object {
+        private const val INCREASE_DESCRIPTION = "-- Increase Balance --"
+    }
+
+    val isIncrease: Boolean
+        get() = description == INCREASE_DESCRIPTION
+}

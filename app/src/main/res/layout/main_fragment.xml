@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.MainFragment">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/balance_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,49 +19,56 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/balance_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:text="$400"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintBottom_toBottomOf="@id/balance_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/balance_title"
-        app:layout_constraintTop_toTopOf="@+id/balance_title" />
+        app:layout_constraintTop_toTopOf="@+id/balance_title"
+        tools:text="$400" />
 
-    <ImageButton
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/add_to_balance_button"
-        android:layout_gravity="left"
+        style="@style/Theme.AllowanceTracker"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_gravity="start"
+        android:contentDescription="@string/add_to_balance_button_content_desc"
         android:scaleType="fitStart"
         android:src="@drawable/ic_baseline_add_box_24"
-        style="@style/Theme.AllowanceTracker"
-        app:layout_constraintTop_toTopOf="@+id/balance_title"
-        app:layout_constraintStart_toEndOf="@id/balance_value"
         app:layout_constraintBottom_toBottomOf="@id/balance_title"
-        android:contentDescription="@string/add_to_balance_button_content_desc" />
+        app:layout_constraintStart_toEndOf="@id/balance_value"
+        app:layout_constraintTop_toTopOf="@+id/balance_title" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/purchases_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:divider="@null"
         android:dividerHeight="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/add_purchase_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/balance_title"
+        tools:itemCount="20"
         tools:listitem="@layout/list_item_purchase" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/add_purchase_button"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
         android:layout_marginHorizontal="30dp"
         android:text="@string/add_purchase_button_label"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/purchases_recycler_view" />
 
     <include
@@ -81,9 +88,9 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
