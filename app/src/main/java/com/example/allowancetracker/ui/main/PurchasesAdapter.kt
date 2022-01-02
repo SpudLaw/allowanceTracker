@@ -1,56 +1,52 @@
 package com.example.allowancetracker.ui.main
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.res.TypedArray
-import android.graphics.Color
-import android.util.TypedValue
-import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.AttrRes
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.allowancetracker.R
 import com.example.allowancetracker.data.Purchase
 import com.example.allowancetracker.databinding.ListItemPurchaseBinding
+import com.example.allowancetracker.ui.recyclerview.color
+import com.example.allowancetracker.ui.recyclerview.context
+import com.example.allowancetracker.ui.recyclerview.inflate
+import com.example.allowancetracker.ui.recyclerview.string
 
 
-class PurchasesAdapter : RecyclerView.Adapter<PurchasesAdapter.ViewHolder>() {
-    var purchaseList: List<Purchase> = emptyList()
+private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Purchase>() {
+    override fun areItemsTheSame(oldItem: Purchase, newItem: Purchase): Boolean {
+        return oldItem.id == newItem.id
+    }
 
-    class ViewHolder(private val binding: ListItemPurchaseBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        @SuppressLint("ResourceType")
-        fun bind(purchase: Purchase) {
-            binding.costTextview.text = String.format("$%.2f", purchase.cost)
-            binding.descriptionTextview.text = purchase.description
+    override fun areContentsTheSame(oldItem: Purchase, newItem: Purchase): Boolean {
+        return oldItem == newItem
+    }
+}
 
-            if (purchase.description == "-- Increase Balance --") {
-                binding.costTextview.setTextColor(Color.parseColor("#008000"))
-            } else {
-                val ta: TypedArray =
-                    binding.costTextview.context.theme.obtainStyledAttributes(R.styleable.ViewStyle)
+class PurchasesAdapter : ListAdapter<Purchase, PurchaseHolder>(DIFF_CALLBACK) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PurchaseHolder {
+        return PurchaseHolder(parent.inflate(R.layout.list_item_purchase))
+    }
 
-                val labelColor: Int = ta.getColor(R.styleable.ViewStyle_labelColor, R.color.black)
+    override fun onBindViewHolder(holder: PurchaseHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
+}
 
-                binding.costTextview.setTextColor(labelColor)
-            }
+class PurchaseHolder(view: View) : RecyclerView.ViewHolder(view) {
+    fun bind(purchase: Purchase): Unit = with(ListItemPurchaseBinding.bind(itemView)) {
+        costTextview.text = string(R.string.cost, purchase.cost)
+        descriptionTextview.text = purchase.description
+
+        if (purchase.isIncrease) {
+            costTextview.setTextColor(color(R.color.cost_increase))
+        } else {
+            val ta: TypedArray = context.theme.obtainStyledAttributes(R.styleable.ViewStyle)
+            val labelColor = ta.getColor(R.styleable.ViewStyle_labelColor, color(R.color.black))
+
+            costTextview.setTextColor(labelColor)
         }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = ListItemPurchaseBinding.inflate(inflater, parent, false)
-        return ViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(purchaseList[position])
-    }
-
-    override fun getItemCount() = purchaseList.count()
-
-    fun setPurchases(purchases: List<Purchase>) {
-        purchaseList = purchases.asReversed()
-        notifyDataSetChanged()
     }
 }

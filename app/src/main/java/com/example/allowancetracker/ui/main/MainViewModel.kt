@@ -26,10 +26,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         purchases = repository.allPurchases
 
         sharedPref = application.getSharedPreferences("preference_key", Context.MODE_PRIVATE)
-        val defaultValue = 400.toFloat()
-        val currentAllowance = sharedPref.getFloat("balance", defaultValue).toDouble()
+        val currentAllowance = sharedPref.getFloat("balance", 400.toFloat()).toDouble()
+        val currentExpenseCost = purchases.value.orEmpty().sumOf { it.cost }
 
-        balance = MutableLiveData(currentAllowance)
+        balance = MutableLiveData(currentAllowance - currentExpenseCost)
     }
 
     fun add(purchase: Purchase) = viewModelScope.launch {
