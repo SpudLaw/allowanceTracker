@@ -8,7 +8,7 @@ import androidx.room.Query
 
 @Dao
 interface PurchaseDao {
-    @Query("SELECT * from purchase_table")
+    @Query("SELECT * from purchase_table ORDER BY date ASC")
     fun getAll(): LiveData<List<Purchase>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -16,4 +16,9 @@ interface PurchaseDao {
 
     @Query("DELETE FROM purchase_table")
     suspend fun deleteAll()
+
+    @Query("SELECT  (  SELECT  sum(cost)   FROM  purchase_table  WHERE  transaction_type IN (:depositTypes))  " +
+            " - (   SELECT sum(cost)   FROM    purchase_table   WHERE transaction_type NOT IN (:depositTypes) )")
+    fun getBalance(depositTypes: List<TransactionType> = TransactionType.depositTypes): LiveData<Double>
+
 }

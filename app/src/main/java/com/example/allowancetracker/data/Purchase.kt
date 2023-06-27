@@ -10,8 +10,9 @@ import java.util.*
 @Parcelize
 @Entity(tableName = "purchase_table")
 data class Purchase(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo(name = "transaction_type") val type: TransactionType,
     @ColumnInfo(name = "cost") val cost: Double,
-    @ColumnInfo(name = "date") val date: Date?,
-    @ColumnInfo(name = "description") val description: String
+    @ColumnInfo(name = "date") val date: Date = Date(),
+    @ColumnInfo(name = "description") val description: String,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0
 ) : Parcelable

@@ -13,4 +13,12 @@ class Converters {
     fun dateToTimestamp(date: Date?): Long? {
         return date?.time
     }
+
+    @TypeConverter
+    fun toTransactionType(transactionType: TransactionType): String = transactionType.serializedName
+
+    @TypeConverter
+    fun fromTransactionType(string: String): TransactionType = TransactionType.values()
+                                                            .first { it.serializedName == string }
+
 }
